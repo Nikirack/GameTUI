@@ -1,0 +1,11 @@
+Screen {
+    layout: horizontal;
+}
+ListView {
+    width: 30%;
+    padding: 1;
+}
+DescriptionPanel {
+    width: 70%;
+    padding: 1;
+}

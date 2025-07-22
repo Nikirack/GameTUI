@@ -1,0 +1,7 @@
+{
+    "theme": "nord",
+    "libs": [
+        "steam",
+        "epic"
+    ]
+}
