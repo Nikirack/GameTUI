@@ -1,6 +1,6 @@
 from textual.app import App, ComposeResult
 from textual.command import CommandPalette
-from textual.widgets import Static, Footer
+from textual.widgets import Static, Footer, Header
 from textual.widgets import ListView, ListItem, Label
 from textual.containers import Horizontal
 from textual.reactive import reactive
@@ -29,6 +29,7 @@ class GameLauncher(App):
     CSS_PATH = "css.tcss"
 
     def compose(self) -> ComposeResult:
+        yield Header()
         self.list_view = ListView()
         self.description_panel = DescriptionPanel()
         yield Horizontal(
@@ -38,7 +39,7 @@ class GameLauncher(App):
         yield Footer()
         
     def on_mount(self):
-        
+        self.title = "TUI Game Launcher"
         with open("games.json", encoding="utf-8") as f:
             self.data = json.load(f)
         with open("settings.json") as f:

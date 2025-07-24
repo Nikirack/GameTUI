@@ -8,7 +8,7 @@ def logo():
     for game in data:
         title = game.get("name", "Unknown Game")
         try:
-            game["description"] = "\n" + pyfiglet.figlet_format(title, width=80)
+            game["description"] = pyfiglet.figlet_format(title, width=80) + "Play "+title+ " on " + game["platform"]
         except Exception as e:
             game["description"] = f"\n[Figlet error: {e}]\n"
 

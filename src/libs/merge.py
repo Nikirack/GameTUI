@@ -3,7 +3,7 @@ import libs
 import os
 import libs.steam
 import libs.epic
-import libs.text_logo
+import libs.description
 
 with open("settings.json") as f:
     settings = json.load(f)
@@ -24,4 +24,4 @@ def list_games():
     with open('games.json', 'w', encoding='utf-8') as outfile:
         json.dump(merged_data, outfile, indent=4)
     
-    libs.text_logo.logo()
+    libs.description.logo()
