@@ -10,7 +10,9 @@ import json
 import os
 from commands import MainCommands, Games
 from game_launcher import start_game
-import libs.merge
+import lib.description
+import lib.merge
+import lib.settings
 
 class DescriptionPanel(Static):
     text: reactive[str] = reactive("")
@@ -91,7 +93,7 @@ class GameLauncher(App):
             self.description_panel.text = self.data[index]["description"]
 
     def refresh_games(self):
-        libs.merge.list_games()
+        lib.merge.list_games()
         self.list_view.clear()
         with open("games.json", encoding="utf-8") as f:
             self.data = json.load(f)
@@ -102,8 +104,16 @@ class GameLauncher(App):
 
 app = GameLauncher()
 if __name__ == "__main__":
-    if os.path.exists("games.json"):
-        app.run()
+    if os.path.exists("settings.json"):
+        if os.path.exists("games.json"):
+            app.run()
+        else:
+            lib.merge.list_games()
+            app.run()
     else:
-        libs.merge.list_games()
-        app.run()
+        lib.settings.gen_settings()
+        if os.path.exists("games.json"):
+            app.run()
+        else:
+            lib.merge.list_games()
+            app.run()
