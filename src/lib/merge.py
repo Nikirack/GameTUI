@@ -1,19 +1,18 @@
 import json
-import lib
+import lib.game_libraries
 import os
 import lib.game_libraries.steam
 import lib.game_libraries.epic
 import lib.description
 
-with open("settings.json") as f:
-    settings = json.load(f)
-
-library = settings["libs"]
-
 def list_games():
+    with open("settings.json") as f:
+        settings = json.load(f)
+
+    library = settings["libs"]
     jsons = []
     for lib_name in library:
-        mod = getattr(lib, lib_name)
+        mod = getattr(lib.game_libraries, lib_name)
         jsons.append(mod.get_games())
 
     merged_data = []

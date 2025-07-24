@@ -10,7 +10,6 @@ import json
 import os
 from commands import MainCommands, Games
 from game_launcher import start_game
-import lib.description
 import lib.merge
 import lib.settings
 
