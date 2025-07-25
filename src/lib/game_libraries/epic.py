@@ -2,7 +2,7 @@ import os
 import json
 
 MANIFEST_DIR = r"C:\ProgramData\Epic\EpicGamesLauncher\Data\Manifests"
-OUTPUT_FILE = "epic_games.json"
+OUTPUT_FILE = "data/epic_games.json"
 
 def get_epic_games():
     games = []

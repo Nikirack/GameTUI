@@ -116,7 +116,7 @@ class Games(Provider):
         self.games = await worker.wait()
 
     def read_files(self):
-        with open("games.json", encoding="utf-8") as f:
+        with open("data/games.json", encoding="utf-8") as f:
             return json.load(f)
         
     def returner(self, index):

@@ -9,5 +9,5 @@ standard_settings = {
 }
 
 def gen_settings():
-    with open('settings.json', 'w', encoding='utf-8') as outfile:
+    with open('data/settings.json', 'w', encoding='utf-8') as outfile:
         json.dump(standard_settings, outfile, indent=4)

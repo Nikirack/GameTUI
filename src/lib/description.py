@@ -2,7 +2,7 @@ import json
 import pyfiglet
 
 def logo():
-    with open("games.json", encoding="utf-8") as f:
+    with open("data/games.json", encoding="utf-8") as f:
         data = json.load(f)
 
     for game in data:
@@ -12,5 +12,5 @@ def logo():
         except Exception as e:
             game["description"] = f"\n[Figlet error: {e}]\n"
 
-    with open("games.json", 'w', encoding='utf-8') as f:
+    with open("data/games.json", 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)

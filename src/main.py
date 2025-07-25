@@ -12,6 +12,8 @@ from commands import MainCommands, Games
 from game_launcher import start_game
 import lib.merge
 import lib.settings
+import lib.steam_info
+import lib.last_played_other
 
 class DescriptionPanel(Static):
     text: reactive[str] = reactive("")
@@ -41,10 +43,12 @@ class GameLauncher(App):
         
     def on_mount(self):
         self.title = "TUI Game Launcher"
-        with open("games.json", encoding="utf-8") as f:
+        with open("data/games.json", encoding="utf-8") as f:
             self.data = json.load(f)
-        with open("settings.json") as f:
+        with open("data/settings.json") as f:
             self.settings = json.load(f)
+
+        self.sort_games_by_last_played()
 
         for item in self.data:
             self.list_view.append(ListItem(Label(item["name"])))
@@ -79,13 +83,15 @@ class GameLauncher(App):
         if self.settings["theme"] != new_value:
             self.notify(f"Theme changed from {old_value} to {new_value}")
             self.settings["theme"] = new_value
-            with open("settings.json", "w") as file:
+            with open("data/settings.json", "w") as file:
                 json.dump(self.settings, file, indent=4)
 
     def launch_game(self):
         index = self.list_view.index
         success, message = start_game(self.data, index=index)
         self.notify(message)
+        lib.merge.merge_data()
+        self.refresh_games()
 
     def update_description(self, index: int):
         if 0 <= index < len(self.data):
@@ -94,25 +100,38 @@ class GameLauncher(App):
     def refresh_games(self):
         lib.merge.list_games()
         self.list_view.clear()
-        with open("games.json", encoding="utf-8") as f:
+        with open("data/games.json", encoding="utf-8") as f:
             self.data = json.load(f)
+        self.sort_games_by_last_played()
         for item in self.data:
             self.list_view.append(ListItem(Label(item["name"])))
         if self.data:
             self.update_description(0)
 
+    def sort_games_by_last_played(self):
+        with open("data/merged_data.json", encoding="utf-8") as f:
+            game_info = json.load(f)
+
+        def get_last_played(game):
+            app_id = game.get("appId")
+            if app_id and app_id in game_info:
+                return int(game_info[app_id].get("LastPlayed", 0))
+            return 0
+
+        self.data.sort(key=get_last_played, reverse=True)
+
 app = GameLauncher()
 if __name__ == "__main__":
-    if os.path.exists("settings.json"):
-        if os.path.exists("games.json"):
-            app.run()
-        else:
+    if not os.path.exists("data/games_info.json"):
+        with open("data/games_info.json", 'w') as f:
+            json.dump({}, f)
+    if os.path.exists("data/settings.json"):
+        if not os.path.exists("data/games.json"):
             lib.merge.list_games()
-            app.run()
     else:
         lib.settings.gen_settings()
-        if os.path.exists("games.json"):
-            app.run()
-        else:
+        if not os.path.exists("data/games.json"):
             lib.merge.list_games()
-            app.run()
+    lib.steam_info.main()
+    lib.merge.merge_data()
+    app.run()

@@ -1,6 +1,9 @@
 import os
 import sys
 import subprocess
+import lib.last_played_other
+import lib.steam_info
+import time
 
 def start(uri):
     if sys.platform == "win32":
@@ -17,9 +20,15 @@ def start_game(data, index=None):
 
     item = data[index]
     platform = item.get("platform", "").lower()
+    app_id = item.get("appId")
+    current_timestamp = int(time.time())
+    if not platform == "steam":
+        lib.last_played_other.create_game_entry(app_id=app_id,playtime_minutes=None,last_played_unix=current_timestamp)
+    
+
 
     if platform == "steam":
-        app_id = item.get("appId")
+        
         if not app_id:
             return False, f"No Steam app_id for {item['name']}"
 
@@ -27,12 +36,12 @@ def start_game(data, index=None):
 
         try:
             start(steam_uri)
+            lib.steam_info.main()
             return True, f"Launching {item['name']} on Steam"
         except Exception as e:
             return False, f"Failed to launch Steam game: {e}"
     
     elif platform == "epic":
-        app_id = item.get("appId")
         if not app_id:
             return False, f"No epic app_id for {item['name']}"
 

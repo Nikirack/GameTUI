@@ -1,7 +1,7 @@
 import os
 import json
 from typing import List, Dict, Optional, Any
-from lib.vdfparser import parse_vdf 
+import vdf
 
 def normalize_path(p: str) -> str:
     return p.replace('\\\\', '\\')
@@ -13,8 +13,12 @@ def parse_steam_library_folders(vdf_path: str) -> List[Dict[str, Any]]:
     with open(vdf_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    vdf = parse_vdf(content)
-    library_data = next(iter(vdf.values())) 
+    try:
+        vdf_data = vdf.loads(content)
+    except Exception:
+        return []
+
+    library_data = next(iter(vdf_data.values()))
 
     libraries = []
 
@@ -36,8 +40,8 @@ def get_game_name_from_acf(acf_path: str) -> Optional[str]:
     with open(acf_path, 'r', encoding='utf-8') as f:
         content = f.read()
     try:
-        vdf = parse_vdf(content)
-        return vdf["AppState"]["name"]
+        vdf_data = vdf.loads(content)
+        return vdf_data["AppState"]["name"]
     except Exception:
         return None
 
@@ -67,7 +71,7 @@ def get_installed_steam_games(vdf_path: str) -> List[Dict[str, str]]:
 
 def get_games():
     vdf_path = r'C:\Program Files (x86)\Steam\steamapps\libraryfolders.vdf'
-    output_path = os.path.join(os.getcwd(), 'steam_games.json')
+    output_path = os.path.join(os.getcwd(), 'data/steam_games.json')
     games = get_installed_steam_games(vdf_path)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(games, f, indent=4)

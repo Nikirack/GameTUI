@@ -5,8 +5,20 @@ import lib.game_libraries.steam
 import lib.game_libraries.epic
 import lib.description
 
+def merge_data():
+    merged_data = {}
+    jsons = ["data/steam_info.json", "data/games_info.json"]
+    
+    for path in jsons:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            merged_data.update(data)
+
+    with open('data/merged_data.json', 'w', encoding='utf-8') as outfile:
+        json.dump(merged_data, outfile, indent=4)
+
 def list_games():
-    with open("settings.json") as f:
+    with open("data/settings.json") as f:
         settings = json.load(f)
 
     library = settings["libs"]
@@ -20,7 +32,7 @@ def list_games():
         merged_data.extend(json.load(open(path, 'r', encoding='utf-8')))
         os.remove(path)
 
-    with open('games.json', 'w', encoding='utf-8') as outfile:
+    with open('data/games.json', 'w', encoding='utf-8') as outfile:
         json.dump(merged_data, outfile, indent=4)
     
     lib.description.logo()
