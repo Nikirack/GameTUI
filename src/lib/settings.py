@@ -1,4 +1,5 @@
 import json
+from lib.paths import *
 
 standard_settings = {
     "theme": "nord",
@@ -9,5 +10,5 @@ standard_settings = {
 }
 
 def gen_settings():
-    with open('data/settings.json', 'w', encoding='utf-8') as outfile:
+    with open(SETTINGS_PATH, 'w', encoding='utf-8') as outfile:
         json.dump(standard_settings, outfile, indent=4)

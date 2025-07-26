@@ -1,8 +1,9 @@
 import json
 import pyfiglet
+from lib.paths import *
 
 def logo():
-    with open("data/games.json", encoding="utf-8") as f:
+    with open(GAMES_PATH, encoding="utf-8") as f:
         data = json.load(f)
 
     for game in data:
@@ -12,5 +13,5 @@ def logo():
         except Exception as e:
             game["description"] = f"\n[Figlet error: {e}]\n"
 
-    with open("data/games.json", 'w', encoding='utf-8') as f:
+    with open(GAMES_PATH, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)

@@ -2,6 +2,7 @@ import os
 import json
 from typing import List, Dict, Optional, Any
 import vdf
+from lib.paths import *
 
 def normalize_path(p: str) -> str:
     return p.replace('\\\\', '\\')
@@ -71,7 +72,7 @@ def get_installed_steam_games(vdf_path: str) -> List[Dict[str, str]]:
 
 def get_games():
     vdf_path = r'C:\Program Files (x86)\Steam\steamapps\libraryfolders.vdf'
-    output_path = os.path.join(os.getcwd(), 'data/steam_games.json')
+    output_path = os.path.join(os.getcwd(), STEAM_GAMES_PATH)
     games = get_installed_steam_games(vdf_path)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(games, f, indent=4)

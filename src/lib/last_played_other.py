@@ -1,16 +1,15 @@
 import json
 import os
 import datetime
-
-FILE_PATH = 'data/games_info.json'
+from lib.paths import *
 
 def innit():
-    if not os.path.exists(FILE_PATH):
-        with open(FILE_PATH, 'w') as f:
+    if not os.path.exists(GAMES_INFO_PATH):
+        with open(GAMES_INFO_PATH, 'w') as f:
             json.dump({}, f)
 
 def create_game_entry(app_id, playtime_minutes, last_played_unix):
-    with open(FILE_PATH, 'r') as f:
+    with open(GAMES_INFO_PATH, 'r') as f:
         games_data = json.load(f)
     if playtime_minutes == None:
         games_data[app_id] = {
@@ -27,5 +26,5 @@ def create_game_entry(app_id, playtime_minutes, last_played_unix):
             "LastPlayedDate": datetime.datetime.fromtimestamp(int(last_played_unix),tz=datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
         }
 
-    with open(FILE_PATH, 'w') as f:
+    with open(GAMES_INFO_PATH, 'w') as f:
         json.dump(games_data, f, indent=2)

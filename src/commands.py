@@ -1,6 +1,7 @@
 from textual.command import Hit, Hits, Provider, DiscoveryHit, CommandPalette
 import json
 from game_launcher import start_game
+from lib.paths import *
 
 theme_names = [
     "textual-dark",
@@ -116,7 +117,7 @@ class Games(Provider):
         self.games = await worker.wait()
 
     def read_files(self):
-        with open("data/games.json", encoding="utf-8") as f:
+        with open(GAMES_PATH, encoding="utf-8") as f:
             return json.load(f)
         
     def returner(self, index):

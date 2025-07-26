@@ -2,9 +2,10 @@ import os
 import json
 import vdf
 import datetime
+from lib.paths import *
 
-SETTINGS_FILE = "data/settings.json"
-OUTPUT_FILE = "data/steam_info.json"
+SETTINGS_FILE = SETTINGS_PATH
+OUTPUT_FILE = STEAM_INFO_PATH
 
 STEAMID64_BASE = 76561197960265728
 

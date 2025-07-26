@@ -1,8 +1,8 @@
 import os
 import json
+from lib.paths import *
 
 MANIFEST_DIR = r"C:\ProgramData\Epic\EpicGamesLauncher\Data\Manifests"
-OUTPUT_FILE = "data/epic_games.json"
 
 def get_epic_games():
     games = []
@@ -36,5 +36,5 @@ def save_to_json(games, output_file):
 
 def get_games():
     epic_games = get_epic_games()
-    games = save_to_json(epic_games, OUTPUT_FILE)
+    games = save_to_json(epic_games, EPIC_GAMES_PATH)
     return games

@@ -27,6 +27,13 @@ pip install -r requirements.txt
 
 Made using python 3.13
 
+## Build
+To buld the application follow the installation steps and run
+```
+pip install pyinstaller
+pyinstaller GameTUI.spec
+```
+
 ## Usage
 
 Run the launcher with:

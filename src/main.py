@@ -14,6 +14,7 @@ import lib.merge
 import lib.settings
 import lib.steam_info
 import lib.last_played_other
+from lib.paths import *
 
 class DescriptionPanel(Static):
     text: reactive[str] = reactive("")
@@ -43,9 +44,9 @@ class GameLauncher(App):
         
     def on_mount(self):
         self.title = "TUI Game Launcher"
-        with open("data/games.json", encoding="utf-8") as f:
+        with open(GAMES_PATH, encoding="utf-8") as f:
             self.data = json.load(f)
-        with open("data/settings.json") as f:
+        with open(SETTINGS_PATH) as f:
             self.settings = json.load(f)
 
         self.sort_games_by_last_played()
@@ -83,7 +84,7 @@ class GameLauncher(App):
         if self.settings["theme"] != new_value:
             self.notify(f"Theme changed from {old_value} to {new_value}")
             self.settings["theme"] = new_value
-            with open("data/settings.json", "w") as file:
+            with open(SETTINGS_PATH, "w") as file:
                 json.dump(self.settings, file, indent=4)
 
     def launch_game(self):
@@ -100,7 +101,7 @@ class GameLauncher(App):
     def refresh_games(self):
         lib.merge.list_games()
         self.list_view.clear()
-        with open("data/games.json", encoding="utf-8") as f:
+        with open(GAMES_PATH, encoding="utf-8") as f:
             self.data = json.load(f)
         self.sort_games_by_last_played()
         for item in self.data:
@@ -109,7 +110,7 @@ class GameLauncher(App):
             self.update_description(0)
 
     def sort_games_by_last_played(self):
-        with open("data/merged_data.json", encoding="utf-8") as f:
+        with open(MERGED_DATA_PATH, encoding="utf-8") as f:
             game_info = json.load(f)
 
         def get_last_played(game):
@@ -122,15 +123,15 @@ class GameLauncher(App):
 
 app = GameLauncher()
 if __name__ == "__main__":
-    if not os.path.exists("data/games_info.json"):
-        with open("data/games_info.json", 'w') as f:
+    if not os.path.exists(GAMES_INFO_PATH):
+        with open(GAMES_INFO_PATH, 'w') as f:
             json.dump({}, f)
-    if os.path.exists("data/settings.json"):
-        if not os.path.exists("data/games.json"):
+    if os.path.exists(SETTINGS_PATH):
+        if not os.path.exists(GAMES_PATH):
             lib.merge.list_games()
     else:
         lib.settings.gen_settings()
-        if not os.path.exists("data/games.json"):
+        if not os.path.exists(GAMES_PATH):
             lib.merge.list_games()
     lib.steam_info.main()
     lib.merge.merge_data()

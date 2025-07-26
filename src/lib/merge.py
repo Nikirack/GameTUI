@@ -4,35 +4,39 @@ import os
 import lib.game_libraries.steam
 import lib.game_libraries.epic
 import lib.description
+from lib.paths import *
 
 def merge_data():
     merged_data = {}
-    jsons = ["data/steam_info.json", "data/games_info.json"]
+    jsons = [STEAM_INFO_PATH, GAMES_INFO_PATH]
     
     for path in jsons:
         with open(path, 'r', encoding='utf-8') as f:
             data = json.load(f)
             merged_data.update(data)
 
-    with open('data/merged_data.json', 'w', encoding='utf-8') as outfile:
+    with open(MERGED_DATA_PATH, 'w', encoding='utf-8') as outfile:
         json.dump(merged_data, outfile, indent=4)
 
 def list_games():
-    with open("data/settings.json") as f:
+    with open(SETTINGS_PATH) as f:
         settings = json.load(f)
 
     library = settings["libs"]
     jsons = []
     for lib_name in library:
-        mod = getattr(lib.game_libraries, lib_name)
-        jsons.append(mod.get_games())
-
+        if lib_name == "steam":
+            lib.game_libraries.steam.get_games()
+            jsons.append(STEAM_GAMES_PATH)
+        elif lib_name == "epic":
+            lib.game_libraries.epic.get_games()
+            jsons.append(EPIC_GAMES_PATH)
     merged_data = []
     for path in jsons:
         merged_data.extend(json.load(open(path, 'r', encoding='utf-8')))
         os.remove(path)
 
-    with open('data/games.json', 'w', encoding='utf-8') as outfile:
+    with open(GAMES_PATH, 'w', encoding='utf-8') as outfile:
         json.dump(merged_data, outfile, indent=4)
     
     lib.description.logo()
