@@ -1,11 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import glob
+
+font_files = [(f, f"pyfiglet/fonts") for f in glob.glob(".venv/Lib/site-packages/pyfiglet/fonts/*.flf")]
 
 a = Analysis(
     ['src\\main.py'],
     pathex=[],
     binaries=[],
-    datas=[('src/css.tcss', '.'), ('.venv\\Lib\\site-packages\\pyfiglet\\fonts', 'pyfiglet\\fonts')],
+    datas=[
+        ('src/css.tcss', '.'),
+        *font_files
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -14,6 +20,7 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
@@ -33,6 +40,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
 coll = COLLECT(
     exe,
     a.binaries,

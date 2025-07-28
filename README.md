@@ -31,7 +31,7 @@ Made using python 3.13
 To buld the application follow the installation steps and run
 ```
 pip install pyinstaller
-pyinstaller GameTUI.spec
+python build.py
 ```
 
 ## Usage
@@ -65,6 +65,11 @@ Planned features for future updates include:
 -  Support for custom games
 
 - Support for linux and MacOS
+
+## Licenses
+
+This project uses third-party libraries licensed under the MIT License.  
+Please see the full license texts in the [`info/THIRD_PARTY_LICENSES`](info/THIRD_PARTY_LICENSES) folder.
 
 ## Author
 
