@@ -1,6 +1,7 @@
 from textual.command import Hit, Hits, Provider, DiscoveryHit, CommandPalette
 import json
 from game_launcher import start_game
+from modals import CustomGameScreen
 from lib.paths import *
 
 theme_names = [
@@ -21,7 +22,8 @@ theme_names = [
 commands = [
     "launch",
     "Update games",
-    "Change theme"
+    "Change theme",
+    "Custom game"
 ]
 
 class MainCommands(Provider):
@@ -51,6 +53,13 @@ class MainCommands(Provider):
                         command=lambda: self.submenu(Theme),
                         help="Changes the current theme"
                     )
+                if command == "Custom game":
+                    yield Hit(
+                        score,
+                        "Add a custom game to your library",
+                        command=self.add_game,
+                        help="Adds a custom game to your library"
+                    )
 
                     
     async def discover(self) -> Hits:
@@ -73,7 +82,19 @@ class MainCommands(Provider):
                     command=lambda: self.submenu(Theme),
                     help="Changes the current theme"
                 )
+            if command == "Custom game":
+                yield DiscoveryHit(
+                    display="Add a custom game to your library",
+                    command=self.add_game,
+                    help="Adds a custom game to your library"
+                )
 
+    def add_game(self):
+        self.app.push_screen(CustomGameScreen(),self.on_game_added)
+    def on_game_added(self, result):
+        if result:
+            self.app.notify(f"Added game: {result['name']}")
+            self.app.refresh_games() # type: ignore
 
     def submenu(self,provider):
         palette = CommandPalette(providers=[provider])

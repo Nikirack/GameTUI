@@ -24,6 +24,7 @@ class DescriptionPanel(Static):
 
 
 class GameLauncher(App):
+    COMMAND_PALETTE_BINDING = "colon"
     COMMANDS = {MainCommands}
     BINDINGS = [
         Binding(key="q", action="quit", description="Quit the app"),

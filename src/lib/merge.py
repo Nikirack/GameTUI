@@ -32,9 +32,12 @@ def list_games():
             lib.game_libraries.epic.get_games()
             jsons.append(EPIC_GAMES_PATH)
     merged_data = []
+    if os.path.exists(CUSTOM_GAMES_PATH):
+        jsons.append(CUSTOM_GAMES_PATH)
     for path in jsons:
         merged_data.extend(json.load(open(path, 'r', encoding='utf-8')))
-        os.remove(path)
+        if not path == CUSTOM_GAMES_PATH:
+            os.remove(path)
 
     with open(GAMES_PATH, 'w', encoding='utf-8') as outfile:
         json.dump(merged_data, outfile, indent=4)
