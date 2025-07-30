@@ -8,6 +8,7 @@ GameTUI is a terminal-based game launcher designed for people who prefer speed, 
 - Keyboard navigation with responsive controls
 - Lightweight and fast
 - Steam and epic library suport (more soon)
+- Support for custom games
 
 ## Screenshot
 
@@ -61,8 +62,6 @@ python main.py
 Planned features for future updates include:
     
 - Support for other libraries like GOG and EA
-    
--  Support for custom games
 
 - Support for linux and MacOS
 
