@@ -93,17 +93,31 @@ def main():
     steamid64 = settings.get("steam_userid")
 
     if not steamid64:
-        steamid64 = choose_steam_user()
-        save_settings({"steam_userid": steamid64})
+        try:
+            steamid64 = choose_steam_user()
+            save_settings({"steam_userid": steamid64})
+        except FileNotFoundError as e:
+            print(f"Warning: {e}. Writing empty JSON.")
+            with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+                json.dump({}, f, indent=2)
+            return
 
     steamid32 = str(int(steamid64) - STEAMID64_BASE)
-    userdata_path = find_userdata_folder()
+    try:
+        userdata_path = find_userdata_folder()
+    except FileNotFoundError as e:
+        print(f"Warning: {e}. Writing empty JSON.")
+        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+            json.dump({}, f, indent=2)
+        return
+
     localconfig_path = os.path.join(userdata_path, steamid32, 'config', 'localconfig.vdf')
 
     if not os.path.isfile(localconfig_path):
-        raise FileNotFoundError(f"localconfig.vdf not found for SteamID {steamid32}")
-
-    playtime_data = parse_playtime(localconfig_path)
+        print(f"Warning: localconfig.vdf not found for SteamID {steamid32}. Writing empty JSON.")
+        playtime_data = {}
+    else:
+        playtime_data = parse_playtime(localconfig_path)
 
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(playtime_data, f, indent=2)
