@@ -26,7 +26,7 @@ def move_licenses():
 
     if os.path.exists(LICENSES_DEST):
         shutil.rmtree(LICENSES_DEST)
-
+    shutil.copy("LICENSE",os.path.join(DIST_DIR, "LICENSE"))
     shutil.copytree(LICENSES_SRC, LICENSES_DEST)
     print("Licenses copied successfully.")
 
